@@ -1,5 +1,5 @@
 import API from '../api/rest'
 
-export const getPokemon = async (nome) => {
-    return await API.getRest(`pokemon/${nome}`)
+export const getPokemon = async (i) => {
+    return await API.getRest(`pokemon/${i}`)
 }

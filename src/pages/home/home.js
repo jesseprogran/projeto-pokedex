@@ -1,57 +1,42 @@
-import { useEffect, useState } from "react";
-import { getPokemon } from "../../services/homeService";
+import { Grid } from '@mui/material';
+import { Container } from '@mui/system';
+import { useEffect, useState } from 'react';
+import { getPokemon } from '../../services/homeService';
+import PokemonCard from './cards';
 
-import "./home.css";
+import './home.css';
 
 function Home() {
-  const [pokemon, setPokemon] = useState("");
-  const [allPokemon, setAllPokemon] = useState("");
+  const [allPokemon, setAllPokemon] = useState([])
 
   useEffect(() => {
-    getPokemon("").then((res) => {
-      setAllPokemon(res);
-    });
-  }, []);
+    const getPokemons = async () => {
+      const pokemons = []
+      for (let i = 1; i <= 30; i++) {
+        const res = await getPokemon(i)
+        pokemons.push(res)
+      }
+      setAllPokemon(pokemons)
+    }
+    getPokemons()
+  }, [])
 
-  const buscarPokemon = (nome) => {
-    getPokemon(nome.target.value).then((res) => {
-      setPokemon(res);
-    });
-  };
-
-  const listPokemon = () => {
-    return allPokemon.results.map((pok,index) =>(
-      <div key = {index}>
-        {pok.name}
-      </div>
-    ))
-   
-  };
+ 
 
   return (
     <div className="App">
-      <input type={"tex"} onChange={buscarPokemon}></input>
+      <h1>BRANCH CAIO</h1>
+        <Grid container>
+          {allPokemon.map((pokemon)=>(
+             <Grid item xs={3}>
+              <PokemonCard name={pokemon.name} image={pokemon.sprites.front_default}/>
+             </Grid>
+          ))}
+          </Grid>
 
-      {pokemon ? (
-        <>
-          nome: {pokemon?.name}
-          <img src={pokemon?.sprites?.back_default}
-          alt={pokemon?.name}
-          ></img>
-        </>
-      ) : (
-        <></>
-      )}
-
-      {allPokemon && (
-        
-        <>
-          <br></br>Procure Seu Pokemon
-          {listPokemon()}
-        </>
-      )}
     </div>
   );
 }
 
 export default Home;
+
